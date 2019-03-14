@@ -7,37 +7,32 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.contrib.auth.models import User
-from django.core.mail import EmailMessage
+# from django.core.mail import EmailMessage
 from django.http  import HttpResponse
-from .models import Profile
+from .models import *
+from .form import *
+from django.contrib.auth.decorators import login_required
+
 
 def index(request):
-    return render(request,'index.html')
+    images = []
+    images = Image.get_images() 
+    print(images)
+
+    return render(request,'index.html',{'images': images})
 
 def signup(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.is_active = False
+            user.is_active = True
             user.save()
-            current_site = get_current_site(request)
-            mail_subject = 'Activate your blog account.'
-            message = render_to_string('acc_active_email.html', {
-                'user': user,
-                'domain': current_site.domain,
-                'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-                'token':account_activation_token.make_token(user),
-            })
-            to_email = form.cleaned_data.get('email')
-            email = EmailMessage(
-                        mail_subject, message, to=[to_email]
-            )
-            email.send()
-            return HttpResponse('Please confirm your email address to complete the registration')
+        return render(request,'registration/success.html')
+        
     else:
         form = SignupForm()
-    return render(request, 'signup.html', {'form': form})
+        return render(request, 'registration/signup.html',{'form':form})
 
 def activate(request, uidb64, token):
     try:
@@ -54,7 +49,43 @@ def activate(request, uidb64, token):
     else:
         return HttpResponse('Activation link is invalid!')
 
+@login_required(login_url='/accounts/login/')
 def profile(request):
-    profile= Profile.objects.all()
-    return render(request,'profile/profile.html', {"profile":profile})
+    # profiles = Profile.search_profile()
+    print(profile)
+    return render(request,'profile/profile.html')
+
+def search(request):
+    if 'search' in request.GET and request.GET['search']:
+        search_term = request.GET.get('search')
+        profiles = Profile.search_profile(search_term)
+        message = f'{search_term}'
+
+        return render(request, 'search.html',{'message':message, 'profiles':profiles})
+    else:
+        message = 'Enter term to search'
+        return render(request, 'search.html', {'message':message})
+
+def like(request, image_id):
+    image = get_object_or_404(Image, pk=image_id)
+    request.user.profile.like(image)
+    return JsonResponse(image.imagelikes.count(), safe=False)
+
+def single_image(request, image_id):
+    image = Image.get_image_id(image_id)
+    comments = Comments.get_comments_by_images(image_id)
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.image = image
+            comment.user = request.user
+            comment.save()
+            return redirect('single_image', image_id=image_id)
+    else:
+        form = CommentForm()
+
+    return render(request, 'image.html', {'image':image, 'form':form, 'comments':comments})
+
 

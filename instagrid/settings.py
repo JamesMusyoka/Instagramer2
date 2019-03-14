@@ -27,6 +27,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'instagram.apps.InstagramConfig',
     'bootstrap4',
+    'tinymce',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -60,7 +61,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'instagrid.wsgi.application'
-
+LOGIN_REDIRECT_URL = '/index'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
@@ -104,3 +105,5 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'jamesmu475@gmail.com'
 EMAIL_HOST_PASSWORD = '37472377'
 EMAIL_PORT = 587
+
+ACCOUNT_ACTIVATION_DAYS = 7 

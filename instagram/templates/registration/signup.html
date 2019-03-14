@@ -2,8 +2,19 @@
 
 
 {% block content %}
+<div  class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <img src="https://cdn.cultofmac.com/wp-content/uploads/2016/12/Instagram001-1-780x610.jpg" class="phone">
+        </div>
+        <div class="right-column text-center">
+            <img src="" class="instagram-logo">
+            <p class="info">Sign up to see photos and videos from your friends</p>
+            <button type="submit" class="btn btn-primary btn-block"><img src="https://mettisglobal.news/wp-content/uploads/2018/07/IMG1720facebook-2661207_960_720.jpg" class="fb-logo">Log in with Facebook</button>
+            <p class="or">OR</p>
   <h2>Sign up</h2>
   <form method="post">
+  <div class="form-group">
     {% csrf_token %}
       {% for field in form %}
       <p>
@@ -18,5 +29,98 @@
       </p>
       {% endfor %}
     <button type="submit">Sign up</button>
+  </div>
   </form>
 {% endblock %}
+
+<style>
+  .phone{
+    padding-top: 70px;
+    height: 650px;
+    float: right;
+    margin: 10px;
+}
+body{
+    background-color: #fafafa!important;
+}
+.container{
+    margin-top: 10px;
+}
+.right-column{
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    width:350px;
+    margin: 10px;
+    padding: 40px;
+}
+.instagram-logo{
+    margin: 15px auto;
+}
+.font{
+    font-weight: 600px;
+    line-height: 20px;
+    color: #999;
+}
+button img{
+    height: 18px !important;
+    padding: 0 8px 2px;
+}
+.or{
+    font-size: 13px !important;
+    color:  #999;
+    font-weight: 600;
+}
+.or::before{
+    content: '';
+    background: #efefef;
+    height: 2px;
+    width: 110px;
+    position: relative;
+    top: 11px;
+}
+.or::after{
+    content: '';
+    background: #efefef;
+    height: 2px;
+    width: 110px;
+    position: relative;
+    bottom: 11px;
+    left:160px;
+}
+.form-group{
+    margin-bottom: 6px!important;
+}
+.form-control{
+    background: #fafafa!important;
+    border: 1px solid #efefef;
+    font-size: 12px!important;
+}
+::placeholder{
+    color: #999!important;
+}
+.btn{
+    margin: 12px auto;
+    padding: 2px!important;
+    font-weight: 600!important;
+}
+.btn-primary{
+    background-color: #3897f0!important;
+    border: #3897f0!important;
+}
+.terms{
+    line-height:  18px;
+    font-size: 14px;
+    color: #999;
+    margin:  5px 20px;
+}
+.right-column-login{
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    width: 250px;
+    margin: 10px;
+    padding: 10px;
+}
+.right-column-login a:hover{
+    text-decoration: none;
+}
+</style>

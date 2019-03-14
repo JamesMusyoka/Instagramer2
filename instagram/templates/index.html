@@ -1,3 +1,27 @@
 {% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load static %}
+{% block content %}
 
-{% block content %}{% endblock %}
+<link rel="stlesheet" href="../static/css/baseinsta.css">
+<link rel="stylesheet" href="../static/js/like.js">
+
+
+
+{%for image in images %}
+<div class="card" id="images">
+    <img src="{{ image.photo.url }}" alt="image" width="300px" height="300px" style="position: center;" >
+    <div class="card-body">
+            <p class="card-text">{{image.commnet}}</p>
+            <hr>
+            <button class="btn btn-outline-danger" data-toggle="modal" data-target="#modal{{image.id}}"><i class="fa fa-comments" style="font-size:36px"></i>Comment</button>
+            <span class="btn btn-outline-danger" onclick="like({image,id})">Like</span>
+            <span id="likespan{{image.id}}">{{image.imagelikes.count}}</span>
+    </div>
+    <form action="{%url 'index'%}" method="Post">
+            {% csrf_token %}
+            <input type="submit" class="btn btn-outline-danger btn-block" value="Post Comment">
+        </form>
+</div>
+{%endfor%}
+{% endblock %}
